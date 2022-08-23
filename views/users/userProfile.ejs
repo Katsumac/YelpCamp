@@ -1,0 +1,156 @@
+<% layout("layouts/boilerplate") %>
+<link rel="stylesheet" href="/stars.css">
+
+<h1 class="text-center mb-5"><%= user.username %>'s Profile </h1>
+
+    <div class="d-flex justify-content-center mb-5">
+        <% if (user.image.length === 0) { %>
+            <img src="https://res.cloudinary.com/dehadt57g/image/upload/w_300,h_300/v1661126260/YelpCamp/Anon_h3swiw.png"
+            class="rounded-circle" alt="anonProfile" crossorigin="anonymous">
+        <% } else { %>
+            <img src="<%= user.image[0].profilePhoto %>" class="rounded-circle" alt="profileImg" crossorigin="anonymous"> 
+            <% } %> 
+    </div>
+    
+    <% if (user._id.equals(currentUser._id)) { %> 
+    <div class="d-flex justify-content-center mb-5">
+        <form class="d-inline" action="/<%= user._id %>/userProfile?_method=PATCH" method="POST"
+            enctype="multipart/form-data">
+            <input type="file" name="image" id="profileImg" class=" form-control-sm ms-2">
+            <button class="btn btn-primary">Upload Image</button>
+        </form>
+    </div>
+    <% } %> 
+
+<h2 class="mb-5">My Campgrounds</h2>
+<div class="mb-5">
+    <% if (campgrounds.docs.length === 0) { %>
+        <div class="container">
+            <div class="row">
+                <% if (user._id.equals(currentUser._id)) { %> 
+                <div class="col-md-8 offset-md-2 mt-5 d-flex justify-content-center">
+                    <h3>You do not have any campgrounds on YelpCamp!</h3>
+                </div>
+                <div class="col-md-8 offset-md-2 mt-5 d-flex justify-content-center">
+                    <a href="/campgrounds/new" class="btn btn-lg btn-primary">New Campground</a>
+                </div>
+                <% } else { %>
+                <div class="col-md-8 offset-md-2 mt-5 d-flex justify-content-center">
+                    <h3> <%= user.username %> does not have any campgrounds on YelpCamp yet!</h3>
+                </div>
+                <% } %> 
+            </div>
+        </div>
+    <% } else { %>
+        <div class="mb-5" id="campgrounds-container">
+        <% for(let campground of campgrounds.docs) { %> 
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <% if (campground.images.length) { %> 
+                        <img src="<%= campground.images[0].preview %>" class="img-fluid" alt="campImg" crossorigin="anonymous">
+                        <% } else { %>
+                            <img src="https://res.cloudinary.com/dehadt57g/image/upload/v1661232095/YelpCamp/cuwv37bniuqcv41usobn.jpg" class="img-fluid" alt="campImg" crossorigin="anonymous">
+                            <% } %> 
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= campground.title %></h5>
+                            <p class="card-text"><%= campground.description %></p>
+                            <p class="car-text">
+                                <small class="text-muted"><%= campground.location %></small>
+                            </p>
+                            <a href="/campgrounds/<%= campground.id %>" class="btn btn-primary mb-3">View <%= campground.title %></a>
+                            <div class="text-muted">
+                                <% const timeDifference = Date.now() - campground.timeCreated %> 
+                                <% const minutes = Math.floor(timeDifference / (1000 * 60)) %>
+                                <% const hours = Math.floor(timeDifference / (1000 * 60 * 60)) %> 
+                                <% const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24)) %>
+                                <% const weeks = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7)) %> 
+                                <% if (minutes < 1) { %>
+                                   Posted less than a minute ago
+                                <% } else if (minutes < 60) { %>
+                                   Posted <%= minutes %><%= (minutes === 1 ? " minute" : " minutes") %> ago
+                                <% } else if (minutes >= 60 && hours < 24) { %>
+                                   Posted <%= hours  %><%= (hours === 1 ? " hour" : " hours") %> ago 
+                                <% } else if (hours >= 24 && days < 7) { %>
+                                   Posted <%= days %><%= (days === 1 ? " day" : " days") %> ago
+                                <% } else if (days >= 7 && weeks < 4) { %> 
+                                   Posted <%= weeks %><%= (weeks === 1 ? " week" : " weeks") %> ago
+                                <% } else { %>
+                                   Posted more than a month ago
+                                <% } %>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <% if (campgrounds.nextPage) { %> 
+            <div class="text-center mb-5">
+                <a href="/<%= user._id %>/userProfile?page=<%= campgrounds.nextPage %>" id="paginate" class="btn btn-primary btn-lg">View More</a>
+            </div>
+            <% } %> 
+            <% } %>
+        </div>
+
+
+<h2 class="my-5">My Reviews</h2>
+<div class="mb-5">
+    <% if (reviews.length === 0) { %>
+        <div class="container">
+            <div class="row">
+                <% if (user._id.equals(currentUser._id)) { %>
+                <div class="col-md-8 offset-md-2 mt-5 d-flex justify-content-center">
+                    <h3>You do not have any reviews on YelpCamp!</h3>
+                </div>
+                <div class="col-md-8 offset-md-2 mt-5 d-flex justify-content-center">
+                    <a href="/campgrounds" class="btn btn-lg btn-primary">Explore Campgrounds</a>
+                </div>
+                <% } else { %>
+                <div class="col-md-8 offset-md-2 mt-5 d-flex justify-content-center">
+                    <h3><%= user.username %> does not have any reviews on YelpCamp yet!</h3>
+                </div>
+                <% } %> 
+            </div>
+        </div>
+        <% } else { %> 
+                <div class="d-flex justify-content-between flex-wrap">
+                <% reviews.forEach((review, i) => { %>
+                    <div class="card mb-5 col-5">
+                      <div class="card-body">
+                          <h5 class="card-title"><%= review.campground.title %></h5>
+                          <p class="starability-result" data-rating="<%= review.rating %>">
+                            Rated: <%= review.rating %> stars</p>
+                            <p class="card-text">Review: <%= review.body %></p>
+                            <a href="/campgrounds/<%= review.campground._id %>" class="btn btn-primary mb-3">View <%= review.campground.title %> </a>
+                        <p class="text-muted">   
+                        <% const timeDifference = Date.now() - reviews[i].timeCreated %> 
+                        <% const minutes = Math.floor(timeDifference / (1000 * 60)) %>
+                        <% const hours = Math.floor(timeDifference / (1000 * 60 * 60)) %> 
+                        <% const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24)) %>
+                        <% const weeks = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7)) %> 
+                        <% if (minutes < 1) { %>
+                           Posted less than a minute ago
+                        <% } else if (minutes < 60) { %>
+                           Posted <%= minutes %><%= (minutes === 1 ? " minute" : " minutes") %> ago
+                        <% } else if (minutes >= 60 && hours < 24) { %>
+                           Posted <%= hours  %><%= (hours === 1 ? " hour" : " hours") %> ago 
+                        <% } else if (hours >= 24 && days < 7) { %>
+                           Posted <%= days %><%= (days === 1 ? " day" : " days") %> ago
+                        <% } else if (days >= 7 && weeks < 4) { %> 
+                           Posted <%= weeks %><%= (weeks === 1 ? " week" : " weeks") %> ago
+                        <% } else { %>
+                           Posted more than a month ago
+                        <% } %>  
+                        </p>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+        <% } %>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="/pagination.js"></script>

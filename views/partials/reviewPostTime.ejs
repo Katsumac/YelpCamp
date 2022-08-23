@@ -1,0 +1,20 @@
+                <% function reviewPostTime(i) { %> 
+                <% const timeDifference = Date.now() - campground.reviews[i].timeCreated %> 
+                <% const minutes = Math.floor(timeDifference / (1000 * 60)) %>
+                <% const hours = Math.floor(timeDifference / (1000 * 60 * 60)) %> 
+                <% const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24)) %>
+                <% const weeks = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7)) %> 
+                <% if (minutes < 1) { %>
+                   Posted less than a minute ago
+                <% } else if (minutes < 60) { %>
+                   Posted <%= minutes %><%= (minutes === 1 ? " minute" : " minutes") %> ago
+                <% } else if (minutes >= 60 && hours < 24) { %>
+                   Posted <%= hours  %><%= (hours === 1 ? " hour" : " hours") %> ago 
+                <% } else if (hours >= 24 && days < 7) { %>
+                   Posted <%= days %><%= (days === 1 ? " day" : " days") %> ago
+                <% } else if (days >= 7 && weeks < 4) { %> 
+                   Posted <%= weeks %><%= (weeks === 1 ? " week" : " weeks") %> ago
+                <% } else { %>
+                   Posted more than a month ago
+                <% } %>
+                <% } %>   

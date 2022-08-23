@@ -1,0 +1,46 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container mb-5" id="search">
+    <h1 class="my-5"> <%= (campgrounds.length === 0 ? "No results" : `${campgrounds.length} result${(campgrounds.length === 1 ? "" : "s")}`)%> for "<%= camp %>"</h1>
+    <form action="/campgrounds/searchResults" method="POST">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-9">
+                <input type="search" name="search[camp]" class="form-control form-control-lg" id="campSearch" placeholder="Search Campground">
+            </div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary btn-lg">Search</button>
+            </div>
+        </div>
+    </form>
+    <% if (campgrounds.length > 0) { %>
+        <% for(let campground of campgrounds) { %> 
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <% if (campground.images.length) { %> 
+                        <img src="<%= campground.images[0].preview %>" class="img-fluid" alt="campImg" crossorigin="anonymous">
+                        <% } else { %>
+                            <img src="https://res.cloudinary.com/dehadt57g/image/upload/v1660977794/YelpCamp/Japan_Camp_kq524k.jpg" class="img-fluid" alt="campImg">
+                            <% } %> 
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= campground.title %></h5>
+                            <p class="card-text"><%= campground.description %></p>
+                            <p class="car-text">
+                                <small class="text-muted"><%= campground.location %></small>
+                            </p>
+                            <a href="/campgrounds/<%= campground.id %>" class="btn btn-primary">View <%= campground.title %></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    <% } %> 
+</div>
+
+<% if (campgrounds.length >= 3) { %> 
+<div class="text-center my-5">
+    <a href="#search" class="btn btn-primary btn-lg">Return to Search Bar</a>
+</div>
+<% } %> 

@@ -1,0 +1,55 @@
+<% layout("layouts/boilerplate") %>
+
+<div id="cluster-map"></div>
+
+<div class="container" id="campgrounds-container">
+    <h1 class="my-5">All Campgrounds</h1>
+    <form action="/campgrounds/searchResults" method="POST">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-9">
+                <input type="search" name="search[camp]" class="form-control form-control-lg" id="campSearch" placeholder="Search Campground">
+            </div>
+            <div class="col-2">
+                <button type="submit" class="btn btn-primary btn-lg">Search</button>
+            </div>
+        </div>
+    </form>
+        <% for(let campground of campgrounds.docs) { %> 
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <% if (campground.images.length) { %> 
+                        <img src="<%= campground.images[0].preview %>" crossorigin="anonymous" class="img-fluid" alt="">
+                        <% } else { %>
+                            <img src="https://res.cloudinary.com/dehadt57g/image/upload/v1660977794/YelpCamp/Japan_Camp_kq524k.jpg" crossorigin="anonymous" class="img-fluid" alt="campImg">
+                            <% } %> 
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= campground.title %></h5>
+                            <p class="card-text"><%= campground.description %></p>
+                            <p class="car-text">
+                                <small class="text-muted"><%= campground.location %></small>
+                            </p>
+                            <a href="/campgrounds/<%= campground.id %>" class="btn btn-primary">View <%= campground.title %></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+</div>
+
+<% if (campgrounds.nextPage) { %> 
+<div class="text-center mb-5">
+    <a href="/campgrounds?page=<%= campgrounds.nextPage %>" id="paginate" class="btn btn-primary btn-lg">View More</a>
+</div>
+<% } %> 
+
+<script>
+    const mapToken = "<%- process.env.MAPBOX_TOKEN %>";
+    const campgrounds = {features: <%- JSON.stringify(allCampgrounds) %>};
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="/pagination.js" crossorigin="anonymous"></script>
+<script src="/clusterMap.js" crossorigin="anonymous"></script>
