@@ -4,12 +4,7 @@
 <h1 class="text-center mb-5"><%= user.username %>'s Profile </h1>
 
     <div class="d-flex justify-content-center mb-5">
-        <% if (user.image.length === 0) { %>
-            <img src="https://res.cloudinary.com/dehadt57g/image/upload/w_300,h_300/v1661126260/YelpCamp/Anon_h3swiw.png"
-            class="rounded-circle" alt="anonProfile" crossorigin="anonymous">
-        <% } else { %>
             <img src="<%= user.image[0].profilePhoto %>" class="rounded-circle" alt="profileImg" crossorigin="anonymous"> 
-            <% } %> 
     </div>
     
     <% if (user._id.equals(currentUser._id)) { %> 

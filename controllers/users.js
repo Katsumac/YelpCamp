@@ -11,7 +11,16 @@ module.exports.renderRegistrationForm = (req, res) => {
 module.exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body.user;
-        const user = new User({ username, email });
+        const user = new User({
+            username,
+            email,
+            image: [
+                {
+                    url: "https://res.cloudinary.com/dehadt57g/image/upload/v1661126260/YelpCamp/Anon_h3swiw.png",
+                    filename: "YelpCamp/Anon_h3swiw"
+                }
+            ]
+        });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if (err) {
@@ -51,13 +60,13 @@ module.exports.renderUserProfile = async (req, res) => {
     const { userId } = req.params;
     const user = await User.findById(userId);
     if (!req.query.page) {
-        const campgrounds = await Campground.paginate({author: userId});
-        const allCampgrounds = await Campground.find({author: userId});
+        const campgrounds = await Campground.paginate({ author: userId });
+        const allCampgrounds = await Campground.find({ author: userId });
         const reviews = await Review.find({ author: userId }).populate("campground");
         res.render("users/userProfile", { user, campgrounds, allCampgrounds, reviews });
     } else {
         const { page } = req.query;
-        const campgrounds = await Campground.paginate({author: userId}, {
+        const campgrounds = await Campground.paginate({ author: userId }, {
             page
         });
         res.status(200).json(campgrounds);
@@ -71,13 +80,22 @@ module.exports.updateProfilePhoto = async (req, res) => {
         return res.redirect(`/${userId}/userProfile`);
     }
     const user = await User.findById(userId);
-    if (user.image.length > 0) {
-        for (let image of user.image) {
-            await cloudinary.uploader.destroy(image.filename);
-        }
+
+    const oldProfilePhoto = user.image[0].filename
+
+    if (oldProfilePhoto !== "YelpCamp/Anon_h3swiw") {
+        await cloudinary.uploader.destroy(user.image[0].filename);
     }
+
+    await user.updateOne({ $pull: { image: { filename: { $in: oldProfilePhoto } } } });
+
     user.image = { url: req.file.path, filename: req.file.filename };
     await user.save();
     req.flash("success", "Profile photo has been updated!");
     res.redirect(`/${userId}/userProfile`);
+}
+
+module.exports.contact = async (req, res) => {
+    const developer = await User.findOne({username: "Justin"});
+    res.render("users/contact", {developer});
 }

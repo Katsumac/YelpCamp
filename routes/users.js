@@ -23,4 +23,6 @@ router.route("/:userId/userProfile")
     .get(isLoggedIn, catchAsync(users.renderUserProfile))
     .patch(isLoggedIn, upload.single("image"), catchAsync(users.updateProfilePhoto))
 
+router.get("/contact", users.contact);
+    
 module.exports = router;
