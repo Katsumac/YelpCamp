@@ -20,7 +20,7 @@ router.route("/login")
 router.get("/logout", users.logout);
 
 router.route("/:userId/userProfile")
-    .get(isLoggedIn, catchAsync(users.renderUserProfile))
+    .get(catchAsync(users.renderUserProfile))
     .patch(isLoggedIn, upload.single("image"), catchAsync(users.updateProfilePhoto))
 
 router.get("/contact", users.contact);
