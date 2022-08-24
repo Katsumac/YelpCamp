@@ -1,0 +1,1 @@
+YelpCamp is a web application that allows users to explore campgrounds. Users may view the information, photos, and reviews of each campground, in addition to the profiles of the campground author and reviewers. Users can make their own campgrounds and post their own reviews as well.
