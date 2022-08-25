@@ -5,6 +5,9 @@ paginate.addEventListener("click", function (e) {
     fetch(this.href)
         .then(response => response.json())
         .then(data => {
+            if (!data.hasNextPage) {
+                paginate.remove();
+            }
             for(let campground of data.docs) {
                 let template = generateCampground(campground);
                 $campgroundsContainer.append(template);
