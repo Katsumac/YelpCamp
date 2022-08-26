@@ -3,11 +3,11 @@
 <div class="container mb-5" id="search">
     <h1 class="my-5"> <%= (campgrounds.length === 0 ? "No results" : `${campgrounds.length} result${(campgrounds.length === 1 ? "" : "s")}`)%> for "<%= camp %>"</h1>
     <form action="/campgrounds/searchResults" method="POST">
-        <div class="row mb-5 justify-content-center">
-            <div class="col-9">
+        <div class="row mb-5 justify-content-md-center">
+            <div class="col-md-9 col-8">
                 <input type="search" name="search[camp]" class="form-control form-control-lg" id="campSearch" placeholder="Search Campground">
             </div>
-            <div class="col-2">
+            <div class="col-md-2 col-1">
                 <button type="submit" class="btn btn-primary btn-lg">Search</button>
             </div>
         </div>

@@ -1,7 +1,7 @@
 <% layout("layouts/boilerplate") %>
 <link rel="stylesheet" href="/stars.css">
 
-<h1 class="text-center mb-5"><%= user.username %>'s Profile </h1>
+<h1 class="text-center mb-5 text-break"><%= user.username %>'s Profile </h1>
 
     <div class="d-flex justify-content-center mb-5">
             <img src="<%= user.image[0].profilePhoto %>" class="rounded-circle" alt="profileImg" crossorigin="anonymous"> 
@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-center mb-5">
         <form class="d-inline" action="/<%= user._id %>/userProfile?_method=PATCH" method="POST"
             enctype="multipart/form-data">
-            <input type="file" name="image" id="profileImg" class=" form-control-sm ms-2">
+            <input type="file" name="image" id="profileImg" class=" form-control-sm ms-2 mb-3 mb-md-0">
             <button class="btn btn-primary">Upload Image</button>
         </form>
     </div>
